@@ -16,13 +16,18 @@ export default function JobsPage() {
   const { jobs, loading, error } = useAppSelector((state) => state.jobs);
 
   useEffect(() => {
+    console.log("Jobs page - Session status:", status);
+    console.log("Jobs page - Session data:", session);
+
     if (status === "loading") return;
 
     if (!session) {
+      console.log("No session, redirecting to signin");
       router.push("/auth/signin");
       return;
     }
 
+    console.log("Session found, fetching jobs");
     dispatch(fetchJobs());
   }, [dispatch, session, status, router]);
 

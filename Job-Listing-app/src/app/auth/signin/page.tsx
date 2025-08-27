@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { useState, useEffect, Suspense } from "react";
-import { signIn, getSession } from "next-auth/react";
+import { signIn, getSession, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -21,16 +21,26 @@ function SignInForm() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/jobs";
   const message = searchParams.get("message");
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     if (message) {
       setSuccess(message);
     }
   }, [message]);
+
+  // Handle redirect when session is established
+  useEffect(() => {
+    if (shouldRedirect && session && status === "authenticated") {
+      console.log("Session established, redirecting to:", callbackUrl);
+      window.location.href = callbackUrl;
+    }
+  }, [shouldRedirect, session, status, callbackUrl]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,24 +58,38 @@ function SignInForm() {
       });
 
       console.log("Sign in result:", result);
+      console.log("Result ok:", result?.ok);
+      console.log("Result error:", result?.error);
+      console.log("Callback URL:", callbackUrl);
 
       if (result?.error) {
         if (result.error === "CredentialsSignin") {
           setError(
-            "Invalid email or password. Please check your credentials and try again."
+            "The email or password you entered doesn't match our records. Please check your details and try again."
           );
         } else {
-          setError("An error occurred during sign in. Please try again.");
+          setError(
+            "We're having trouble signing you in. Please try again or contact support if the problem continues."
+          );
         }
       } else if (result?.ok) {
-        // Refresh session and redirect
-        await getSession();
-        router.push(callbackUrl);
-        router.refresh();
+        // Set success message and trigger redirect
+        setSuccess("Welcome back! We're taking you to your dashboard...");
+        setShouldRedirect(true);
+
+        // Fallback redirect in case session doesn't update
+        setTimeout(() => {
+          if (!session) {
+            console.log("Fallback redirect to:", callbackUrl);
+            window.location.href = callbackUrl;
+          }
+        }, 3000);
       }
     } catch (error) {
       console.error("Sign in error:", error);
-      setError("An unexpected error occurred. Please try again.");
+      setError(
+        "We encountered an unexpected issue. Please try again or contact our support team if the problem continues."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -86,6 +110,7 @@ function SignInForm() {
           src="/signin.png"
           alt="Sign In"
           fill
+          sizes="(max-width: 1024px) 0vw, 50vw"
           className="object-cover"
           priority
         />
@@ -113,7 +138,6 @@ function SignInForm() {
                   id="email"
                   name="email"
                   type="email"
-                  required
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="Enter email address"
@@ -134,7 +158,6 @@ function SignInForm() {
                     id="password"
                     name="password"
                     type={showPassword ? "text" : "password"}
-                    required
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="Enter password"
@@ -157,18 +180,37 @@ function SignInForm() {
               </div>
 
               {success && (
-                <Alert className="border-green-200 bg-green-50">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  <AlertDescription className="text-green-800">
-                    {success}
-                  </AlertDescription>
-                </Alert>
+                <div className="flex items-start space-x-3 p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <svg
+                    className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <p className="text-sm text-green-700">{success}</p>
+                </div>
               )}
 
               {error && (
-                <Alert variant="destructive">
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
+                <div className="flex items-start space-x-3 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <svg
+                    className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <p className="text-sm text-red-700">{error}</p>
+                </div>
               )}
 
               <Button
