@@ -59,7 +59,7 @@ const handler = NextAuth({
       console.log("JWT callback - Token:", token);
       if (user) {
         token.accessToken = user.accessToken;
-        token.id = user.id;
+        token.id = String(user.id);
       }
       return token;
     },
@@ -67,7 +67,7 @@ const handler = NextAuth({
       console.log("Session callback - Token:", token);
       if (token) {
         session.accessToken = token.accessToken;
-        session.user.id = token.id || token.sub || "1";
+        session.user.id = String(token.id || token.sub || "1");
         session.user.name = token.name;
         session.user.email = token.email;
       }
