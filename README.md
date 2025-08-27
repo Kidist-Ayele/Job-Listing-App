@@ -32,30 +32,35 @@ A modern, responsive job listing application built with Next.js, featuring a bea
 
 ### Welcome Landing Page
 
-![Welcome Landing Page](screenshots/landing-page.png)
+<img width="1366" height="1284" alt="screencapture-jobbwebbapp-netlify-app-2025-08-27-15_19_37" src="https://github.com/user-attachments/assets/731602e4-5bb5-4c90-b899-1d150328f007" />
+
 _Beautiful landing page with hero section, features, and call-to-action buttons_
 
 ### Job Listings Dashboard
 
-![Job Listings Dashboard](screenshots/job-listings.png)
+<img width="1350" height="638" alt="image" src="https://github.com/user-attachments/assets/c0866dbe-6695-4b40-8771-fa488674d73b" />
+
 _Main dashboard showing job cards with bookmark buttons and responsive design_
 
 ### Job Detail Page
 
-![Job Detail Page](screenshots/job-detail-page.png)
+<img width="1366" height="947" alt="screencapture-jobbwebbapp-netlify-app-job-65509e9353a7667de6ef5a60-2025-08-27-15_25_52" src="https://github.com/user-attachments/assets/dcc919bd-616d-4daf-afdd-7603a3708e10" />
+
 _Detailed view of a job posting with bookmark functionality_
 
 ### Authentication Pages
 
-![Sign In Page](screenshots/signin-page.png)
-_User authentication with responsive design_
+<img width="1366" height="802" alt="screencapture-jobbwebbapp-netlify-app-auth-signup-2025-08-27-15_27_10" src="https://github.com/user-attachments/assets/6f1a6ce7-c007-4a59-93c3-78cd0bfd20d5" />
 
-![Sign Up Page](screenshots/signup-page.png)
-_User registration form with email verification_
+<img width="1366" height="641" alt="screencapture-jobbwebbapp-netlify-app-auth-signin-2025-08-27-15_28_04" src="https://github.com/user-attachments/assets/af30bfd0-f86b-426b-858b-220972c03d0a" />
+
 
 ### Mobile Responsive Design
 
-![Mobile View](screenshots/mobile-responsive.png)
+<img width="351" height="553" alt="image" src="https://github.com/user-attachments/assets/fc9f3f3d-44cc-46b1-8e22-1ce2d2395b13" />
+
+<img width="342" height="551" alt="image" src="https://github.com/user-attachments/assets/bdce06e5-8209-44a3-96e6-2cb6bec649d9" />
+
 _Mobile-optimized interface with touch-friendly interactions_
 
 ## 🛠️ Technology Stack
